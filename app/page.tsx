@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import NumberField, { parseNumber } from "@/components/NumberField";
+import PhotoEstimate from "@/components/PhotoEstimate";
 import {
   MEAL_CATEGORIES,
   type MealCategory,
@@ -57,6 +58,13 @@ export default function RecordPage() {
     }));
     setMealName("");
     setMealKcal("");
+  }
+
+  function addEstimatedMeals(items: { name: string; kcal: number }[]) {
+    updateDay(dateKey, (d) => ({
+      ...d,
+      meals: [...d.meals, ...items.map((item) => ({ id: crypto.randomUUID(), category, ...item }))],
+    }));
   }
 
   function removeMeal(id: string) {
@@ -192,6 +200,8 @@ export default function RecordPage() {
             追加
           </button>
         </form>
+
+        <PhotoEstimate category={category} onCategoryChange={setCategory} onAdd={addEstimatedMeals} />
 
         {day.meals.length === 0 ? (
           <p className="muted empty">この日の食事はまだ記録されていません。</p>
